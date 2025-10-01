@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MessageCircle, X, Plus, PieChart as PieChartIcon, Home, Send, Calendar } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5001/api';
 
 function App() {
   const [page, setPage] = useState('ledger');
