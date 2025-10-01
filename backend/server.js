@@ -1,6 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import dotenv from 'dotenv';
+dotenv.config();
+
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import expenseRoutes from './routes/expenses.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -18,16 +22,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// MongoDB connection - FIXED: Use lowercase database name to avoid conflict
-mongoose.connect('mongodb://localhost:27017/blingledger', {
+// MongoDB connection - Use environment variable for secure connection
+const connection_url = process.env.MONGODB_URI || 'mongodb://localhost:27017/blingledger';
+
+mongoose.connect(connection_url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('✅ Connected to MongoDB (blingledger database)'))
+.then(() => console.log('✅ Connected to MongoDB'))
 .catch((error) => console.error('❌ MongoDB connection error:', error));
 
 // Routes
-app.use('/api/expenses', require('./routes/expenses'));
+app.use('/api/expenses', expenseRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const expenseSchema = new mongoose.Schema({
   category: {
@@ -8,8 +8,7 @@ const expenseSchema = new mongoose.Schema({
   },
   subCategory: {
     type: String,
-    required: false,
-    enum: ['Breakfast', 'Lunch', 'Dinner', 'Snacks', 'Drinks', '']
+    required: false
   },
   description: {
     type: String,
@@ -18,7 +17,7 @@ const expenseSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: true,
-    min: 0
+    min: 0.01
   },
   date: {
     type: Date,
@@ -29,4 +28,15 @@ const expenseSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Expense', expenseSchema);
+// Pre-save hook to ensure proper data structure
+expenseSchema.pre('save', function(next) {
+  if (this.category !== 'Food') {
+    this.subCategory = undefined;
+  }
+  if (this.category === 'Food') {
+    this.description = undefined;
+  }
+  next();
+});
+
+export default mongoose.model('Expense', expenseSchema);

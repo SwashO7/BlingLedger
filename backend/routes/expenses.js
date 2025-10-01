@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import Expense from '../models/Expense.js';
+
 const router = express.Router();
-const Expense = require('../models/Expense');
 
 // GET /api/expenses - Get all expenses (sorted by most recent first)
 router.get('/', async (req, res) => {
@@ -26,14 +27,8 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'Category and amount are required' });
     }
     
-    if (category === 'Food' && !subCategory) {
-      console.log('❌ Validation error: Missing subcategory for Food');
-      return res.status(400).json({ message: 'Sub-category is required for Food expenses' });
-    }
-    
-    if (category !== 'Food' && !description?.trim()) {
-      console.log('❌ Validation error: Missing description for non-Food expense');
-      return res.status(400).json({ message: 'Description is required for non-Food expenses' });
+    if (parseFloat(amount) < 0.01) {
+      return res.status(400).json({ message: 'Amount must be at least 0.01' });
     }
 
     // Create new expense
@@ -68,4 +63,22 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+// DELETE /api/expenses/clear-all - Delete all expenses
+router.delete('/clear-all', async (req, res) => {
+  try {
+    const result = await Expense.deleteMany({});
+    console.log(`🗑️ Deleted ${result.deletedCount} expenses`);
+    res.json({ 
+      message: 'All expenses cleared successfully',
+      deletedCount: result.deletedCount 
+    });
+  } catch (error) {
+    console.error('❌ Error clearing expenses:', error);
+    res.status(500).json({ 
+      message: 'Server error while clearing expenses',
+      error: error.message 
+    });
+  }
+});
+
+export default router;
