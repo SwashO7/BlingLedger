@@ -35,6 +35,15 @@ mongoose.connect(connection_url, {
 // Routes
 app.use('/api/expenses', expenseRoutes);
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    message: 'Blingledger API is running!', 
+    env: process.env.VERCEL ? 'vercel' : 'local',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Basic route
 app.get('/', (req, res) => {
   res.json({ message: 'Blingledger API is running!' });
@@ -47,5 +56,7 @@ if (!process.env.VERCEL) {
   });
 }
 
-// Export Express app as the default handler for Vercel Node.js runtime
-export default app;
+// Export serverless handler for Vercel (@vercel/node)
+export default function handler(req, res) {
+  return app(req, res);
+}

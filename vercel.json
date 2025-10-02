@@ -1,15 +1,24 @@
 {
   "version": 2,
-  "installCommand": "npm i --prefix frontend && npm i --prefix backend",
-  "buildCommand": "CI=false npm run build --prefix frontend",
-  "outputDirectory": "frontend/build",
-  "functions": {
-    "backend/server.js": {
-      "runtime": "nodejs20.x"
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node@3.0.0"
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build@2.0.0",
+      "config": { "distDir": "build" }
     }
-  },
+  ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/backend/server.js" },
-    { "src": "/(.*)", "dest": "/frontend/build/$1" }
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/build/$1"
+    }
   ]
 }
