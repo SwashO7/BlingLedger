@@ -214,3 +214,5 @@ For issues and questions:
 ---
 
 **Happy expense tracking with BlingLedger! 💰📊**
+
+<!-- Deployed to Vercel with cloud MongoDB -->
