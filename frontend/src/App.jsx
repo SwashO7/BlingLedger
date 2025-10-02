@@ -717,7 +717,7 @@ function App() {
           }
         }, 100);
       }, 800);
-    }, [chatInput, processMessage]);
+    }, [processMessage]);
 
     const handleKeyPress = React.useCallback((e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
