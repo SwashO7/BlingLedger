@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MessageCircle, X, Plus, PieChart as PieChartIcon, Home, Send, Calendar } from 'lucide-react';
@@ -717,7 +717,7 @@ function App() {
           }
         }, 100);
       }, 800);
-    }, [chatInput]);
+    }, [chatInput, processMessage]);
 
     const handleKeyPress = React.useCallback((e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
