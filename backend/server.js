@@ -40,7 +40,12 @@ app.get('/', (req, res) => {
   res.json({ message: 'Blingledger API is running!' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-});
+// Start server locally only. On Vercel, export the handler for serverless runtime.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  });
+}
+
+// Export Express app as the default handler for Vercel Node.js runtime
+export default app;
