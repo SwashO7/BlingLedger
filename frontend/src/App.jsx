@@ -553,7 +553,7 @@ function App() {
       });
     };
 
-    const processMessage = async (message) => {
+    const processMessage = React.useCallback(async (message) => {
       const lowerMessage = message.toLowerCase();
       const categories = ['food', 'travel', 'groceries', 'rent', 'other'];
       const foodSubCategories = ['breakfast', 'lunch', 'dinner', 'snacks', 'drinks'];
@@ -685,7 +685,7 @@ function App() {
 ⏰ **Time periods**: today, yesterday, this week, last week, this month, last month, this year, last year
 🏷️ **Categories**: food, travel, groceries, rent, other
 🍽️ **Food types**: breakfast, lunch, dinner, snacks, drinks`;
-    };
+    }, [expenses]);
 
     const handleSendMessage = React.useCallback(async () => {
       if (!chatInput.trim()) return;
