@@ -724,7 +724,7 @@ function App() {
         e.preventDefault();
         handleSendMessage();
       }
-    }, [chatInput]);
+    }, [handleSendMessage]);
 
     const handleInputChange = React.useCallback((e) => {
       setChatInput(e.target.value);
@@ -735,7 +735,7 @@ function App() {
       if (chatContainerRef.current) {
         chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
       }
-    }, [chatMessages, isTyping]);
+    }, []);
 
     // Focus input when chat opens and maintain focus
     React.useEffect(() => {
@@ -752,7 +752,7 @@ function App() {
         
         return () => clearTimeout(timeoutId);
       }
-    }, [isChatOpen]);
+    }, []);
 
     // Prevent input from losing focus due to re-renders
     React.useEffect(() => {
