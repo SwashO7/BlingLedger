@@ -685,7 +685,7 @@ function App() {
 ⏰ **Time periods**: today, yesterday, this week, last week, this month, last month, this year, last year
 🏷️ **Categories**: food, travel, groceries, rent, other
 🍽️ **Food types**: breakfast, lunch, dinner, snacks, drinks`;
-    }, [expenses, filterExpensesByDate, getDateRange]);
+    }, [filterExpensesByDate, getDateRange]);
 
     const handleSendMessage = React.useCallback(async () => {
       if (!chatInput.trim()) return;
