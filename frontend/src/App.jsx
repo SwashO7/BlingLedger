@@ -145,17 +145,39 @@ function App() {
   const fetchExpenses = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/expenses`);
+      const response = await axios.get(`${API_BASE_URL}/expenses`, { timeout: 10000 });
       setExpenses(response.data);
     } catch (error) {
       console.error('Error fetching expenses:', error);
-      setMessage('Error fetching expenses');
+      setMessage('Error loading expenses. Please refresh the page.');
+      setTimeout(() => setMessage(''), 5000);
     } finally {
       setLoading(false);
     }
   };
 
-  const LedgerPage = () => {
+  const clearAllExpenses = async () => {
+    if (!window.confirm('⚠️ Are you sure you want to delete ALL expenses? This action cannot be undone!')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.delete(`${API_BASE_URL}/expenses/clear-all`);
+      
+      if (response.status === 200) {
+        setMessage('✅ All expenses cleared successfully!');
+        setExpenses([]); // Clear the local state
+        setTimeout(() => setMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Error clearing expenses:', error);
+      setMessage('❌ Error clearing expenses. Please try again.');
+      setTimeout(() => setMessage(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };  const LedgerPage = () => {
     const [formData, setFormData] = useState({
       category: '',
       subCategory: '',
@@ -500,6 +522,22 @@ function App() {
             <div className="text-center py-8 text-gray-500">
               No transactions yet. Start by adding some expenses!
             </div>
+          )}
+        </div>
+
+        {/* Database Management Section */}
+        <div className="dark-card rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 text-center border-2 border-red-500/30 bg-gradient-to-r from-red-900/20 to-red-800/20">
+          <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-200">Database Management</h3>
+          <button
+            onClick={clearAllExpenses}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading || expenses.length === 0}
+          >
+            {loading ? 'Clearing...' : 'Clear All Expenses'}
+          </button>
+          <p className="text-xs text-gray-400 mt-2">⚠️ This action cannot be undone</p>
+          {expenses.length === 0 && (
+            <p className="text-xs text-gray-500 mt-1">No expenses to clear</p>
           )}
         </div>
       </div>
