@@ -511,7 +511,7 @@ function App() {
     const inputRef = React.useRef(null);
 
     // Enhanced date filtering functions
-    const getDateRange = (period) => {
+    const getDateRange = React.useCallback((period) => {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       
@@ -541,9 +541,9 @@ function App() {
         default:
           return null;
       }
-    };
+    }, []);
 
-    const filterExpensesByDate = (expenses, period) => {
+    const filterExpensesByDate = React.useCallback((expenses, period) => {
       const range = getDateRange(period);
       if (!range) return expenses;
       
@@ -551,7 +551,7 @@ function App() {
         const expenseDate = new Date(expense.date);
         return expenseDate >= range.start && expenseDate < range.end;
       });
-    };
+    }, [getDateRange]);
 
     const processMessage = React.useCallback(async (message) => {
       const lowerMessage = message.toLowerCase();
@@ -685,7 +685,7 @@ function App() {
 ⏰ **Time periods**: today, yesterday, this week, last week, this month, last month, this year, last year
 🏷️ **Categories**: food, travel, groceries, rent, other
 🍽️ **Food types**: breakfast, lunch, dinner, snacks, drinks`;
-    }, [expenses]);
+    }, [expenses, filterExpensesByDate]);
 
     const handleSendMessage = React.useCallback(async () => {
       if (!chatInput.trim()) return;
